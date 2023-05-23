@@ -15,17 +15,19 @@ import java.util.List;
 public class Ingredient {
 
     @Id
-    @Column(name = "ingredient_id")
+    @Column(name = "ingredient_id", updatable = false, nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String title;
 
+    @Column(nullable = false)
     private BigDecimal price;
 
-    @Column(name = "valid_to")
+    @Column(name = "valid_to", nullable = false)
     private Date validTo;
 
-    @Column(name = "valid_from")
+    @Column(name = "valid_from", nullable = false)
     private Date validFrom;
 
     @ManyToMany(mappedBy = "ingredientList")
