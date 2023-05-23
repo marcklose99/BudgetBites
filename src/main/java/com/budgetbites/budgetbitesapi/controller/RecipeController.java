@@ -1,5 +1,6 @@
 package com.budgetbites.budgetbitesapi.controller;
 
+import com.budgetbites.budgetbitesapi.exceptions.RecipeCreationException;
 import com.budgetbites.budgetbitesapi.models.Recipe;
 import com.budgetbites.budgetbitesapi.services.RecipeServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -26,17 +27,17 @@ public class RecipeController {
     @PostMapping(
             value = "/recipes",
             consumes = "application/json")
-    public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
+    public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) throws RecipeCreationException {
         return recipeService.createRecipe(recipe);
     }
 
     @PutMapping("/recipes/{id}")
-    public ResponseEntity<Recipe> updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
-        return recipeService.updateRecipe(id, recipe);
+    public void updateRecipe(@PathVariable Long id, @RequestBody Recipe recipe) {
+        recipeService.updateRecipe(id, recipe);
     }
 
     @DeleteMapping("/recipes/{id}")
-    public ResponseEntity<Recipe> deleteRecipe(@PathVariable Long id) {
-        return recipeService.deleteRecipe(id);
+    public void deleteRecipe(@PathVariable Long id) {
+        recipeService.deleteRecipe(id);
     }
 }
