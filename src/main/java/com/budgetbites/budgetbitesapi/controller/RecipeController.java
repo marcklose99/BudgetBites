@@ -1,6 +1,5 @@
 package com.budgetbites.budgetbitesapi.controller;
 
-import com.budgetbites.budgetbitesapi.exceptions.RecipeCreationException;
 import com.budgetbites.budgetbitesapi.models.Recipe;
 import com.budgetbites.budgetbitesapi.services.RecipeServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,7 @@ public class RecipeController {
     @PostMapping(
             value = "/recipes",
             consumes = "application/json")
-    public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) throws RecipeCreationException {
+    public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
         return recipeService.createRecipe(recipe);
     }
 
