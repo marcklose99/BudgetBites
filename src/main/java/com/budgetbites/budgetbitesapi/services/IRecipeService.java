@@ -1,5 +1,6 @@
 package com.budgetbites.budgetbitesapi.services;
 
+import com.budgetbites.budgetbitesapi.exceptions.RecipeCreationException;
 import com.budgetbites.budgetbitesapi.models.Recipe;
 import org.springframework.http.ResponseEntity;
 
@@ -11,9 +12,9 @@ public interface IRecipeService {
 
     ResponseEntity<Recipe> getRecipeById(Long id);
 
-    ResponseEntity<Recipe> createRecipe(Recipe recipe);
+    ResponseEntity<Recipe> createRecipe(Recipe recipe) throws RecipeCreationException;
 
-    ResponseEntity<Recipe> updateRecipe(Long id, Recipe recipe);
+    void updateRecipe(Long id, Recipe recipe);
 
-    ResponseEntity<Recipe> deleteRecipe(Long id);
+    void deleteRecipe(Long id);
 }
