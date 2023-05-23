@@ -23,7 +23,9 @@ public class RecipeController {
         return recipeService.getRecipeById(id);
     }
 
-    @PostMapping("/recipes")
+    @PostMapping(
+            value = "/recipes",
+            consumes = "application/json")
     public ResponseEntity<Recipe> createRecipe(@RequestBody Recipe recipe) {
         return recipeService.createRecipe(recipe);
     }
