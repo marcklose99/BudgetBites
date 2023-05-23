@@ -1,6 +1,5 @@
 package com.budgetbites.budgetbitesapi.services;
 
-import com.budgetbites.budgetbitesapi.exceptions.RecipeCreationException;
 import com.budgetbites.budgetbitesapi.exceptions.RecipeNotFoundException;
 import com.budgetbites.budgetbitesapi.models.Recipe;
 import com.budgetbites.budgetbitesapi.repository.RecipeRepository;
@@ -47,16 +46,16 @@ public class RecipeServiceImpl implements IRecipeService {
      *
      * @param recipe the recipe to create
      * @return ResponseEntity containing the created recipe
-     * @throws RecipeCreationException if an error occurs while creating the recipe
      */
     @Override
-    public ResponseEntity<Recipe> createRecipe(Recipe recipe) throws RecipeCreationException {
+    public ResponseEntity<Recipe> createRecipe(Recipe recipe) {
         try {
             recipeRepository.save(recipe);
             return new ResponseEntity<>(recipe, HttpStatus.CREATED);
         } catch (Exception e) {
-            throw new RecipeCreationException();
+            e.printStackTrace();
         }
+        return null;
     }
 
     /**
