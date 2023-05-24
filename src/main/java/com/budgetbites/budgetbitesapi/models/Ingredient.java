@@ -2,12 +2,14 @@ package com.budgetbites.budgetbitesapi.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 @Entity
@@ -37,9 +39,6 @@ public class Ingredient {
 
     @Column(name = "valid_from", nullable = false)
     private Date validFrom;
-
-    @ManyToMany(mappedBy = "ingredientList")
-    private List<Recipe> recipes;
 
     @JsonProperty("brand")
     private void unpackBrandFromNestedObject(Map<String, String> brand) {
