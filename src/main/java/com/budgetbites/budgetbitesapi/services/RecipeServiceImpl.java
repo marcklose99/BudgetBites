@@ -1,6 +1,7 @@
 package com.budgetbites.budgetbitesapi.services;
 
 import com.budgetbites.budgetbitesapi.exceptions.RecipeNotFoundException;
+import com.budgetbites.budgetbitesapi.models.Ingredient;
 import com.budgetbites.budgetbitesapi.models.Recipe;
 import com.budgetbites.budgetbitesapi.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +17,8 @@ import java.util.List;
 public class RecipeServiceImpl implements IRecipeService {
 
     private final RecipeRepository recipeRepository;
+
+    private final IngredientService ingredientService;
 
     /**
      * Retrieves all recipes.
@@ -50,7 +54,23 @@ public class RecipeServiceImpl implements IRecipeService {
     @Override
     public ResponseEntity<Recipe> createRecipe(Recipe recipe) {
         try {
+
+            List<Ingredient> ingredientList = recipe.getIngredientList();
+            if (ingredientList != null && !ingredientList.isEmpty()) {
+                List<Ingredient> newIngredients = new ArrayList<>();
+                for (Ingredient ingredient : ingredientList) {
+                    if (ingredientService.getIngredientById(ingredient.getId()) == null) {
+                        // Ingredient existiert noch nicht, erstellen Sie es
+                        ingredientService.createIngredient(ingredient);
+                    }
+                    newIngredients.add(ingredient);
+                }
+                recipe.setIngredientList(newIngredients);
+            }
+
+            // Speichern des Recipes
             recipeRepository.save(recipe);
+
             return new ResponseEntity<>(recipe, HttpStatus.CREATED);
         } catch (Exception e) {
             e.printStackTrace();
