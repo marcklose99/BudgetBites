@@ -1,5 +1,6 @@
 package com.budgetbites.budgetbitesapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import java.util.List;
 @Entity
 @Table
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Recipe {
 
     @Id
@@ -18,7 +20,7 @@ public class Recipe {
     @Column(nullable = false)
     private String title;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany
     @JoinTable(
             name = "recipe_ingredient",
             joinColumns = @JoinColumn(name = "recipe_id"),
