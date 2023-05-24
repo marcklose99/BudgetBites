@@ -1,15 +1,19 @@
 package com.budgetbites.budgetbitesapi.services;
 
 import com.budgetbites.budgetbitesapi.models.Ingredient;
-import org.springframework.http.ResponseEntity;
+import com.fasterxml.jackson.databind.JsonNode;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface IngredientService {
-    ResponseEntity<List<Ingredient>> getAllIngredients();
+    
+    Ingredient getIngredientById(Long id);
+    List<Ingredient> fetchIngredients() throws IOException, InterruptedException;
 
-    ResponseEntity<Ingredient> getIngredientById(Long id);
+    List<Ingredient> getMatchingIngredients(String title);
 
-    ResponseEntity<Ingredient> createIngredient(Ingredient ingredient);
+    JsonNode getResponseFromWebsite(int fetchedResultsCount) throws IOException, InterruptedException;
 
+    void createIngredient(Ingredient ingredient);
 }
