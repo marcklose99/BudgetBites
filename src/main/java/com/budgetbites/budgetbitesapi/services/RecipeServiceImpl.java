@@ -9,7 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,29 +52,15 @@ public class RecipeServiceImpl implements IRecipeService {
      */
     @Override
     public ResponseEntity<Recipe> createRecipe(Recipe recipe) {
-        try {
+        List<Ingredient> ingredientList = recipe.getIngredientList();
+        List<Long> ingredientIds = ingredientList.stream().map(Ingredient::getId).toList();
 
-            List<Ingredient> ingredientList = recipe.getIngredientList();
-            if (ingredientList != null && !ingredientList.isEmpty()) {
-                List<Ingredient> newIngredients = new ArrayList<>();
-                for (Ingredient ingredient : ingredientList) {
-                    if (ingredientService.getIngredientById(ingredient.getId()) == null) {
-                        // Ingredient existiert noch nicht, erstellen Sie es
-                        ingredientService.createIngredient(ingredient);
-                    }
-                    newIngredients.add(ingredient);
-                }
-                recipe.setIngredientList(newIngredients);
-            }
-
-            // Speichern des Recipes
+        if(ingredientService.validateIngredientList(ingredientIds)) {
             recipeRepository.save(recipe);
-
-            return new ResponseEntity<>(recipe, HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            throw new IllegalArgumentException("At least one submitted id is not valid.");
         }
-        return null;
+        return new ResponseEntity<>(recipe, HttpStatus.CREATED);
     }
 
     /**
