@@ -40,6 +40,9 @@ public class Ingredient {
     @Column(name = "valid_from", nullable = false)
     private Date validFrom;
 
+    @Column(name = "is_valid", nullable = false)
+    private boolean isValid = false;
+
     @JsonProperty("brand")
     private void unpackBrandFromNestedObject(Map<String, String> brand) {
         nameOfBrand = brand.get("name");
