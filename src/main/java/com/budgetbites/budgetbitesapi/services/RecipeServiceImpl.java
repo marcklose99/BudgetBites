@@ -56,6 +56,7 @@ public class RecipeServiceImpl implements IRecipeService {
         List<Long> ingredientIds = ingredientList.stream().map(Ingredient::getId).toList();
 
         if(ingredientService.validateIngredientList(ingredientIds)) {
+            recipe.setIngredientList(ingredientService.findAllById(ingredientIds));
             recipeRepository.save(recipe);
         } else {
             throw new IllegalArgumentException("At least one submitted id is not valid.");
@@ -71,14 +72,14 @@ public class RecipeServiceImpl implements IRecipeService {
      * @throws RecipeNotFoundException if the recipe with the given ID is not found
      */
     @Override
-    public void updateRecipe(Long id, Recipe updatedRecipe) {
-        recipeRepository.findById(id)
+    public ResponseEntity<Recipe> updateRecipe(Long id, Recipe updatedRecipe) {
+        return new ResponseEntity<>(recipeRepository.findById(id)
                 .map(recipe -> {
                     recipe.setTitle(updatedRecipe.getTitle());
                     recipe.setIngredientList(updatedRecipe.getIngredientList());
                     return recipeRepository.save(recipe);
                 })
-                .orElseThrow(() -> new RecipeNotFoundException(id));
+                .orElseThrow(() -> new RecipeNotFoundException(id)), HttpStatus.CREATED);
     }
 
     /**
