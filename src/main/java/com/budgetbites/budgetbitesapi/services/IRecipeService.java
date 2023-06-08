@@ -13,7 +13,7 @@ public interface IRecipeService {
 
     ResponseEntity<Recipe> createRecipe(Recipe recipe);
 
-    void updateRecipe(Long id, Recipe recipe);
+    ResponseEntity<Recipe> updateRecipe(Long id, Recipe recipe);
 
     void deleteRecipe(Long id);
 }
