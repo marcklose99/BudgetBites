@@ -25,4 +25,6 @@ public interface IngredientService {
     boolean validateIngredientList(List<Long> ingredientIds);
 
     Date getDate();
+
+    List<Ingredient> findAllById(List<Long> ingredientIds);
 }

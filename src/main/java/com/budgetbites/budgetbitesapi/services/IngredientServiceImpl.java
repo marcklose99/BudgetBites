@@ -197,6 +197,11 @@ public class IngredientServiceImpl implements IngredientService {
         return ingredientsRepository.findMinDate().getValidTo();
     }
 
+    @Override
+    public List<Ingredient> findAllById(List<Long> ingredientIds) {
+        return ingredientsRepository.findAllById(ingredientIds);
+    }
+
     /**
      * Validates a list of ingredient IDs.
      *
