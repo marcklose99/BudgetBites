@@ -7,7 +7,6 @@ import lombok.Data;
 import java.util.List;
 
 @Entity
-@Table
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Recipe {
@@ -27,4 +26,8 @@ public class Recipe {
             inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
     @Column(nullable = false)
     private List<Ingredient> ingredientList;
+
+    @OneToMany(mappedBy = "recipe",cascade = CascadeType.PERSIST)
+    @Column(nullable = false)
+    private List<Instruction> instructionList;
 }
