@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,7 +12,6 @@ import java.util.Date;
 import java.util.Map;
 
 @Entity
-@Table
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Ingredient {
@@ -34,13 +32,14 @@ public class Ingredient {
     @Column(nullable = false)
     private String nameOfRetailer;
 
-    @Column(name = "valid_to", nullable = false)
+    @Column(nullable = false)
     private Date validTo;
 
-    @Column(name = "valid_from", nullable = false)
+    @Column(nullable = false)
     private Date validFrom;
 
-    @Column(name = "is_valid", nullable = false)
+    @Column(nullable = false)
+    @JsonProperty("isValid")
     private boolean isValid = false;
 
     @JsonProperty("brand")
