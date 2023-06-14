@@ -2,7 +2,9 @@ package com.budgetbites.budgetbitesapi.services;
 
 import com.budgetbites.budgetbitesapi.exceptions.RecipeNotFoundException;
 import com.budgetbites.budgetbitesapi.models.Ingredient;
+import com.budgetbites.budgetbitesapi.models.Instruction;
 import com.budgetbites.budgetbitesapi.models.Recipe;
+import com.budgetbites.budgetbitesapi.repository.InstructionRepository;
 import com.budgetbites.budgetbitesapi.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ public class RecipeServiceImpl implements IRecipeService {
     private final RecipeRepository recipeRepository;
 
     private final IngredientService ingredientService;
+    private final InstructionRepository instructionRepository;
 
     /**
      * Retrieves all recipes.
@@ -57,7 +60,12 @@ public class RecipeServiceImpl implements IRecipeService {
 
         if(ingredientService.validateIngredientList(ingredientIds)) {
             recipe.setIngredientList(ingredientService.findAllById(ingredientIds));
-            recipeRepository.save(recipe);
+            Recipe savedRecipe = recipeRepository.save(recipe);
+            for (Instruction instruction : savedRecipe.getInstructionList()) {
+                instruction.setRecipe(savedRecipe);
+            }
+
+            instructionRepository.saveAll(savedRecipe.getInstructionList());
         } else {
             throw new IllegalArgumentException("At least one submitted id is not valid.");
         }
