@@ -13,7 +13,7 @@ public class Recipe {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "recipe_id", updatable = false, nullable = false)
+    @Column(name = "recipe_id", updatable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -27,7 +27,10 @@ public class Recipe {
     @Column(nullable = false)
     private List<Ingredient> ingredientList;
 
-    @OneToMany(mappedBy = "recipe",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "recipe",cascade = CascadeType.ALL)
     @Column(nullable = false)
     private List<Instruction> instructionList;
+
+    @Column(nullable = false)
+    private String imageName;
 }
