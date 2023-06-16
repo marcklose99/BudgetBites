@@ -4,12 +4,15 @@ import com.budgetbites.budgetbitesapi.exceptions.RecipeNotFoundException;
 import com.budgetbites.budgetbitesapi.models.Ingredient;
 import com.budgetbites.budgetbitesapi.models.Instruction;
 import com.budgetbites.budgetbitesapi.models.Recipe;
+import com.budgetbites.budgetbitesapi.models.RecipeDTO;
 import com.budgetbites.budgetbitesapi.repository.InstructionRepository;
 import com.budgetbites.budgetbitesapi.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -18,9 +21,9 @@ import java.util.List;
 public class RecipeServiceImpl implements IRecipeService {
 
     private final RecipeRepository recipeRepository;
-
     private final IngredientService ingredientService;
     private final InstructionRepository instructionRepository;
+    private final S3BucketStorageService s3BucketStorageService;
 
     /**
      * Retrieves all recipes.
@@ -54,13 +57,18 @@ public class RecipeServiceImpl implements IRecipeService {
      * @return ResponseEntity containing the created recipe
      */
     @Override
-    public ResponseEntity<Recipe> createRecipe(Recipe recipe) {
+    public ResponseEntity<Recipe> createRecipe(@RequestPart RecipeDTO recipe, @RequestPart MultipartFile file) {
+        Recipe createdRecipe = new Recipe();
+        String uniqueFileName = s3BucketStorageService.generateFileName(file);
+        s3BucketStorageService.uploadFile(uniqueFileName, file);
         List<Ingredient> ingredientList = recipe.getIngredientList();
         List<Long> ingredientIds = ingredientList.stream().map(Ingredient::getId).toList();
-
-        if(ingredientService.validateIngredientList(ingredientIds)) {
-            recipe.setIngredientList(ingredientService.findAllById(ingredientIds));
-            Recipe savedRecipe = recipeRepository.save(recipe);
+        if (ingredientService.validateIngredientList(ingredientIds)) {
+            createdRecipe.setTitle(recipe.getTitle());
+            createdRecipe.setInstructionList(recipe.getInstructionList());
+            createdRecipe.setIngredientList(ingredientService.findAllById(ingredientIds));
+            createdRecipe.setImageName(uniqueFileName);
+            Recipe savedRecipe = recipeRepository.save(createdRecipe);
             for (Instruction instruction : savedRecipe.getInstructionList()) {
                 instruction.setRecipe(savedRecipe);
             }
@@ -69,7 +77,7 @@ public class RecipeServiceImpl implements IRecipeService {
         } else {
             throw new IllegalArgumentException("At least one submitted id is not valid.");
         }
-        return new ResponseEntity<>(recipe, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdRecipe, HttpStatus.CREATED);
     }
 
     /**
@@ -104,5 +112,10 @@ public class RecipeServiceImpl implements IRecipeService {
             throw new RecipeNotFoundException(id);
         }
 
+    }
+
+    public String getUrl(Long id) {
+        Recipe recipe = recipeRepository.findById(id).get();
+        return s3BucketStorageService.download(recipe.getImageName());
     }
 }
