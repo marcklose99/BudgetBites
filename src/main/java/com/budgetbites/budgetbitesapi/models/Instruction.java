@@ -5,14 +5,15 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table
 @Data
 public class Instruction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private int stepId;
+
     @Column(nullable = false)
     private String text;
 
@@ -20,6 +21,4 @@ public class Instruction {
     @JoinColumn(name = "recipe_id")
     @JsonIgnore
     private Recipe recipe;
-
-
 }
