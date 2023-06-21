@@ -12,13 +12,10 @@ public interface IngredientService {
     
     Ingredient getIngredientById(Long id);
 
-    void fetchIngredients() throws IOException, InterruptedException, SchedulerException;
-
     List<Ingredient> getMatchingIngredients(String title);
+    List<Ingredient> getMatchingIngredients(String title, String filter);
 
-    JsonNode getResponseFromWebsite(int fetchedResultsCount) throws IOException, InterruptedException;
-
-    void updateOrCreate(Ingredient ingredient);
+    void create(int postalCode);
 
     void updateIngredientsValidity(Date date) throws SchedulerException;
 

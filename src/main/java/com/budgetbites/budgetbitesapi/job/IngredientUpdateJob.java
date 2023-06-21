@@ -19,13 +19,15 @@ public class IngredientUpdateJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) {
-        Date executionDate = ingredientService.getDate();
-        try {
-            ingredientService.fetchIngredients();
+        /**
+         Date executionDate = ingredientService.getDate();
+
+         try {
             ingredientService.updateIngredientsValidity(executionDate);
-        } catch (SchedulerException | IOException | InterruptedException e) {
+        } catch (SchedulerException e) {
             throw new RuntimeException(e);
         }
+        */
     }
 
 }

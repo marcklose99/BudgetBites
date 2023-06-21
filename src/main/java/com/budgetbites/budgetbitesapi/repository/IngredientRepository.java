@@ -10,9 +10,11 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface IngredientsRepository extends JpaRepository<Ingredient, Long> {
+public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     @Query(value = "SELECT * FROM ingredient WHERE title LIKE %:title%", nativeQuery = true)
     List<Ingredient> findByTitle(@Param("title") String title);
+    @Query(value = "SELECT * FROM ingredient WHERE title LIKE %:title% AND name_of_retailer = :filter", nativeQuery = true)
+    List<Ingredient> findByTitle(@Param("title") String title, @Param("filter") String filter);
 
     @Query(value = "SELECT * FROM ingredient i WHERE i.valid_to LIKE CONCAT('%', ?1, '%')", nativeQuery = true)
     List<Ingredient> findByDate(Date executionDate);

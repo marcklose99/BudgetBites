@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -41,6 +42,10 @@ public class Ingredient {
     @Column(nullable = false)
     @JsonProperty("isValid")
     private boolean isValid = false;
+
+    @Lob
+    @Column(nullable = false, length = 512)
+    private String description;
 
     @JsonProperty("brand")
     private void unpackBrandFromNestedObject(Map<String, String> brand) {
