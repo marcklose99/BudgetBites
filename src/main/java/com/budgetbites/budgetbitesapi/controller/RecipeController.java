@@ -16,10 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RecipeController {
     private final RecipeServiceImpl recipeService;
-
-    @GetMapping("/recipes")
-    public ResponseEntity<List<Recipe>> getAllRecipes() {
-        return recipeService.getAllRecipes();
+    @GetMapping("/recipes/overview/{filter}")
+    public ResponseEntity<List<Recipe>> getAllRecipes(@PathVariable(required = false) String filter) {
+        return recipeService.getAllRecipes(filter);
     }
 
     @GetMapping("/recipes/{id}")

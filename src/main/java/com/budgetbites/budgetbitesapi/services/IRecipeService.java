@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IRecipeService {
 
-    ResponseEntity<List<Recipe>> getAllRecipes();
+    ResponseEntity<List<Recipe>> getAllRecipes(String filter);
 
     ResponseEntity<Recipe> getRecipeById(Long id);
 

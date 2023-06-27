@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,8 +32,16 @@ public class RecipeServiceImpl implements IRecipeService {
      * @return ResponseEntity containing the list of recipes
      */
     @Override
-    public ResponseEntity<List<Recipe>> getAllRecipes() {
-        List<Recipe> recipes = recipeRepository.findAll();
+    public ResponseEntity<List<Recipe>> getAllRecipes(String filter) {
+        List<Recipe> recipes = new ArrayList<>();
+        if (filter.equals("all")) {
+            recipes = recipeRepository.findAll();
+        } else if (filter.equals("offer")) {
+            recipes = recipeRepository.recipesOnOffer();
+        } else {
+            recipes = recipeRepository.recipesByMarketCount(Integer.parseInt(filter));
+        }
+
         return new ResponseEntity<>(recipes, HttpStatus.OK);
     }
 
