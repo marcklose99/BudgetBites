@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class FetcherServiceImpl implements FetcherService {
+public class FetchService {
 
     private int postalCode;
 
@@ -27,7 +27,6 @@ public class FetcherServiceImpl implements FetcherService {
     private final ObjectMapper objectMapper;
 
 
-    @Override
     public List<Ingredient> getIngredients(int postalCode) {
         this.postalCode = postalCode;
         int fetchResultCount = 0;
@@ -62,7 +61,6 @@ public class FetcherServiceImpl implements FetcherService {
      * @param offset the number of results already fetched.
      * @return the response as a JsonNode.
      */
-    @Override
     public JsonNode fetch(int offset) {
         String url = String.format(String.format("https://api.marktguru.de/api/v1/industries/supermaerkte/offers?as=mobile&limit=512&offset=%d&zipCode=%d", offset, this.postalCode));
 

@@ -21,7 +21,7 @@ public class IngredientServiceImpl implements IngredientService {
 
     private final IngredientRepository ingredientRepository;
     private final SchedulerService schedulerService;
-    private final FetcherService fetcherService;
+    private final FetchService fetchService;
 
     private Date date;
 
@@ -60,7 +60,7 @@ public class IngredientServiceImpl implements IngredientService {
     @Override
     public void create(int postalCode) {
         this.date = new Date();
-        List<Ingredient> ingredients = fetcherService
+        List<Ingredient> ingredients = fetchService
                 .getIngredients(postalCode)
                 .stream()
                 .map(ingredient -> {
