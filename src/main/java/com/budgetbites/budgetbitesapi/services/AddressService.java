@@ -25,8 +25,8 @@ public class AddressService {
 
     private boolean isFetchDateValid(Address address) {
         LocalDate now = LocalDate.now();
-        LocalDate fiveDaysAgo = now.minus(5, ChronoUnit.DAYS);
-        if(address.getLatestFetchDate().isBefore(fiveDaysAgo)) {
+        LocalDate oneDayAgo = now.minus(1, ChronoUnit.DAYS);
+        if(address.getLatestFetchDate().isBefore(oneDayAgo)) {
             address.setLatestFetch(now);
             addressRepository.save(address);
             return false;
