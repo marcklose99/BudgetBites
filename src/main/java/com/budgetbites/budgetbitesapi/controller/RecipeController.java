@@ -1,7 +1,6 @@
 package com.budgetbites.budgetbitesapi.controller;
 
 import com.budgetbites.budgetbitesapi.models.Recipe;
-import com.budgetbites.budgetbitesapi.models.RecipeDTO;
 import com.budgetbites.budgetbitesapi.services.RecipeServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

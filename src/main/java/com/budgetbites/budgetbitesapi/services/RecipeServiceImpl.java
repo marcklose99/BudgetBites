@@ -4,7 +4,6 @@ import com.budgetbites.budgetbitesapi.exceptions.RecipeNotFoundException;
 import com.budgetbites.budgetbitesapi.models.Ingredient;
 import com.budgetbites.budgetbitesapi.models.Instruction;
 import com.budgetbites.budgetbitesapi.models.Recipe;
-import com.budgetbites.budgetbitesapi.models.RecipeDTO;
 import com.budgetbites.budgetbitesapi.repository.InstructionRepository;
 import com.budgetbites.budgetbitesapi.repository.RecipeRepository;
 import lombok.RequiredArgsConstructor;
