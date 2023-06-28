@@ -27,7 +27,7 @@ public class RecipeController {
     }
 
     @PostMapping(path = "/recipes", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Recipe> createRecipe(@RequestPart RecipeDTO recipe, @RequestPart MultipartFile file) {
+    public ResponseEntity<Recipe> createRecipe(@RequestPart Recipe recipe, @RequestPart MultipartFile file) {
         return recipeService.createRecipe(recipe, file);
     }
 

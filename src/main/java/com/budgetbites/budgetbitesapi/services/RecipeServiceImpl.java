@@ -66,7 +66,7 @@ public class RecipeServiceImpl implements IRecipeService {
      * @return ResponseEntity containing the created recipe
      */
     @Override
-    public ResponseEntity<Recipe> createRecipe(@RequestPart RecipeDTO recipe, @RequestPart MultipartFile file) {
+    public ResponseEntity<Recipe> createRecipe(@RequestPart Recipe recipe, @RequestPart MultipartFile file) {
         Recipe createdRecipe = new Recipe();
         String uniqueFileName = s3BucketStorageService.generateFileName(file);
         s3BucketStorageService.uploadFile(uniqueFileName, file);
