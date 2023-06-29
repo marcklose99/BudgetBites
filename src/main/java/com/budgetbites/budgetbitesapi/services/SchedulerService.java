@@ -5,6 +5,8 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -17,6 +19,8 @@ public class SchedulerService {
 
     private final Scheduler scheduler;
 
+    Logger logger = LoggerFactory.getLogger(SchedulerService.class);
+
     public void updateJobExecutionDate(Date date) throws SchedulerException {
         Trigger existingTrigger = scheduler.getTrigger(triggerKey("ingredientUpdateJobTrigger"));
 
@@ -27,5 +31,6 @@ public class SchedulerService {
                 .build();
 
         scheduler.rescheduleJob(existingTrigger.getKey(), updatedTrigger);
+        logger.info(String.format("New job scheduled at: %s ", date));
     }
 }

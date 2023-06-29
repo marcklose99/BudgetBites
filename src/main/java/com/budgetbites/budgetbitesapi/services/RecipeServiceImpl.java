@@ -76,6 +76,7 @@ public class RecipeServiceImpl implements IRecipeService {
             createdRecipe.setInstructionList(recipe.getInstructionList());
             createdRecipe.setIngredientList(ingredientService.findAllById(ingredientIds));
             createdRecipe.setImageName(uniqueFileName);
+            createdRecipe.setDescription(recipe.getDescription());
             Recipe savedRecipe = recipeRepository.save(createdRecipe);
             for (Instruction instruction : savedRecipe.getInstructionList()) {
                 instruction.setRecipe(savedRecipe);

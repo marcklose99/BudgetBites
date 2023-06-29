@@ -1,10 +1,8 @@
 package com.budgetbites.budgetbitesapi.services;
 
 import com.budgetbites.budgetbitesapi.models.Ingredient;
-import com.fasterxml.jackson.databind.JsonNode;
 import org.quartz.SchedulerException;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -15,13 +13,13 @@ public interface IngredientService {
     List<Ingredient> getMatchingIngredients(String title);
     List<Ingredient> getMatchingIngredients(String title, String filter);
 
-    void create(int postalCode);
+    void create(int postalCode) throws SchedulerException;
 
     void updateIngredientsValidity(Date date) throws SchedulerException;
 
     boolean validateIngredientList(List<Long> ingredientIds);
 
-    Date getDate();
+    Date getNextExpireDate();
 
     List<Ingredient> findAllById(List<Long> ingredientIds);
 }

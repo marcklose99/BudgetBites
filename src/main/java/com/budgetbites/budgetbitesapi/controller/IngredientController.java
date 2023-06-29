@@ -4,6 +4,7 @@ import com.budgetbites.budgetbitesapi.models.Ingredient;
 import com.budgetbites.budgetbitesapi.services.AddressService;
 import com.budgetbites.budgetbitesapi.services.IngredientService;
 import lombok.RequiredArgsConstructor;
+import org.quartz.SchedulerException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,7 +23,7 @@ public class IngredientController {
     private final AddressService addressService;
 
     @GetMapping("/ingredients/fetch/{postalCode}")
-    public void fetchIngredients(@PathVariable int postalCode) {
+    public void fetchIngredients(@PathVariable int postalCode) throws SchedulerException {
         if(!addressService.isPostalCodeActive(postalCode)) {
             ingredientService.create(postalCode);
         }

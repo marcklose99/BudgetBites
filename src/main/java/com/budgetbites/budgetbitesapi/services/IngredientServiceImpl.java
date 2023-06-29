@@ -3,13 +3,11 @@ package com.budgetbites.budgetbitesapi.services;
 import com.budgetbites.budgetbitesapi.exceptions.IngredientNotFoundException;
 import com.budgetbites.budgetbitesapi.models.Ingredient;
 import com.budgetbites.budgetbitesapi.repository.IngredientRepository;
-import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -24,6 +22,11 @@ public class IngredientServiceImpl implements IngredientService {
     private final FetchService fetchService;
 
     private Date date;
+
+    @PostConstruct
+    public void setup() throws SchedulerException {
+        scheduleJob();
+    }
 
     /**
      * Retrieves a list of ingredients matching the given title.
@@ -58,7 +61,7 @@ public class IngredientServiceImpl implements IngredientService {
      * A known ingredient gets updated otherwise it's created
      */
     @Override
-    public void create(int postalCode) {
+    public void create(int postalCode) throws SchedulerException {
         this.date = new Date();
         List<Ingredient> ingredients = fetchService
                 .getIngredients(postalCode)
@@ -73,6 +76,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .toList();
 
         ingredientRepository.saveAll(ingredients);
+        scheduleJob();
     }
 
     /**
@@ -95,7 +99,7 @@ public class IngredientServiceImpl implements IngredientService {
      * @throws SchedulerException if an error occurs while scheduling the job.
      */
     public void scheduleJob() throws SchedulerException {
-        schedulerService.updateJobExecutionDate(getDate());
+        schedulerService.updateJobExecutionDate(getNextExpireDate());
     }
 
     /**
@@ -115,7 +119,7 @@ public class IngredientServiceImpl implements IngredientService {
      *
      * @return the date.
      */
-    public Date getDate() {
+    public Date getNextExpireDate() {
         return ingredientRepository.findMinDate().getValidTo();
     }
 

@@ -8,7 +8,6 @@ import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Date;
 
 @Component
@@ -19,15 +18,15 @@ public class IngredientUpdateJob implements Job {
 
     @Override
     public void execute(JobExecutionContext context) {
-        /**
-         Date executionDate = ingredientService.getDate();
+
+         Date executionDate = ingredientService.getNextExpireDate();
 
          try {
             ingredientService.updateIngredientsValidity(executionDate);
         } catch (SchedulerException e) {
             throw new RuntimeException(e);
         }
-        */
+
     }
 
 }

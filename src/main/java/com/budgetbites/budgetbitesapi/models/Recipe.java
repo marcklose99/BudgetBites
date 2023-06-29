@@ -33,4 +33,6 @@ public class Recipe {
 
     @Column(nullable = false)
     private String imageName;
+
+    private String description;
 }
