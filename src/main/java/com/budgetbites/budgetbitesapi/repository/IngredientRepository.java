@@ -16,7 +16,7 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     @Query(value = "SELECT * FROM ingredient WHERE title LIKE %:title% AND name_of_retailer = :filter", nativeQuery = true)
     List<Ingredient> findByTitle(@Param("title") String title, @Param("filter") String filter);
 
-    @Query(value = "SELECT * FROM ingredient i WHERE i.valid_to < ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM ingredient i WHERE i.valid_to <= ?1 and is_valid = 1", nativeQuery = true)
     List<Ingredient> findByDate(Date executionDate);
 
     @Query(value = "SELECT * FROM ingredient WHERE is_valid = true AND valid_to = (SELECT MIN(valid_to) FROM ingredient WHERE is_valid = true) LIMIT 1", nativeQuery = true)
