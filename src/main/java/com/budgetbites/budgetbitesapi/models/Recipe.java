@@ -34,5 +34,7 @@ public class Recipe {
     @Column(nullable = false)
     private String imageName;
 
+    @Lob
+    @Column(name="TEXT", length=512)
     private String description;
 }
