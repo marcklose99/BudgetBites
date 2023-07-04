@@ -14,7 +14,8 @@ public class Instruction {
     @Column(nullable = false)
     private int stepId;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, name="TEXT", length=512)
     private String text;
 
     @ManyToOne
