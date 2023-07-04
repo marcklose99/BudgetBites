@@ -20,18 +20,18 @@ public class AddressService {
             addressRepository.save(new Address(postalCode));
             return false;
         }
-        return isFetchDateValid(address.get());
+        return isFetchDateExpired(address.get());
     }
 
-    private boolean isFetchDateValid(Address address) {
+    private boolean isFetchDateExpired(Address address) {
         LocalDate now = LocalDate.now();
         LocalDate oneDayAgo = now.minus(1, ChronoUnit.DAYS);
         if(address.getLatestFetchDate().isBefore(oneDayAgo)) {
             address.setLatestFetch(now);
             addressRepository.save(address);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 }
