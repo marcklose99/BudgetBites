@@ -18,4 +18,4 @@ jobs:
           distribution: 'adopt'
 
       - name: tests
-        run: gradle clean build
+        run: gradle test
