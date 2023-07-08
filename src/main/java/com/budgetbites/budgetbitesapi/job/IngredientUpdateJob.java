@@ -8,7 +8,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ public class IngredientUpdateJob implements Job {
     @Override
     public void execute(JobExecutionContext context) {
 
-         Date executionDate = ingredientService.getNextExpireDate();
+        LocalDateTime executionDate = ingredientService.getNextExpireDate();
 
          try {
             ingredientService.updateIngredientsValidity(executionDate);

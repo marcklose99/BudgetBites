@@ -1,14 +1,13 @@
 package com.budgetbites.budgetbitesapi.services;
 
-import com.budgetbites.budgetbitesapi.exceptions.IngredientNotFoundException;
 import com.budgetbites.budgetbitesapi.models.Ingredient;
 import com.budgetbites.budgetbitesapi.repository.IngredientRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Implementation of the IngredientService.
@@ -21,11 +20,12 @@ public class IngredientServiceImpl implements IngredientService {
     private final SchedulerService schedulerService;
     private final FetchService fetchService;
 
-    private Date date;
+    private LocalDateTime dateTime;
 
-    @PostConstruct
-    public void setup() throws SchedulerException {
-        scheduleJob();
+
+    @Override
+    public Ingredient getIngredientById(Long id) {
+        return ingredientRepository.findById(id).get();
     }
 
     /**
@@ -45,24 +45,11 @@ public class IngredientServiceImpl implements IngredientService {
     }
 
     /**
-     * Retrieves an ingredient by its ID.
-     *
-     * @param id the ID of the ingredient.
-     * @return the ingredient with the specified ID.
-     * @throws IngredientNotFoundException if the ingredient is not found.
-     */
-    @Override
-    public Ingredient getIngredientById(Long id) {
-        return ingredientRepository.findById(id)
-                .orElseThrow(() -> new IngredientNotFoundException(id));
-    }
-
-    /**
      * A known ingredient gets updated otherwise it's created
      */
     @Override
-    public void create(int postalCode) throws SchedulerException {
-        this.date = new Date();
+    public List<Ingredient> create(int postalCode) throws SchedulerException {
+        this.dateTime = LocalDateTime.now();
         List<Ingredient> ingredients = fetchService
                 .getIngredients(postalCode)
                 .stream()
@@ -77,6 +64,7 @@ public class IngredientServiceImpl implements IngredientService {
 
         ingredientRepository.saveAll(ingredients);
         scheduleJob();
+        return ingredients;
     }
 
     /**
@@ -86,7 +74,8 @@ public class IngredientServiceImpl implements IngredientService {
      * @throws SchedulerException if an error occurs while scheduling the job.
      */
     @Override
-    public void updateIngredientsValidity(Date date) throws SchedulerException {
+    public void updateIngredientsValidity(LocalDateTime date) throws SchedulerException {
+        System.out.println("Updated ingredients");
         List<Ingredient> ingredientsToUpdate = ingredientRepository.findByDate(date);
         ingredientsToUpdate.forEach(ingredient -> ingredient.setValid(false));
         ingredientRepository.saveAll(ingredientsToUpdate);
@@ -109,9 +98,10 @@ public class IngredientServiceImpl implements IngredientService {
      * @return true if the ingredient is valid, false otherwise.
      */
     private boolean isIngredientValid(Ingredient ingredient) {
-        Date validFrom = ingredient.getValidFrom();
-        Date validTo = ingredient.getValidTo();
-        return date.after(validFrom) && date.before(validTo);
+        LocalDateTime validFrom = ingredient.getValidFrom();
+        LocalDateTime validTo = ingredient.getValidTo();
+        boolean isValid = dateTime.isAfter(validFrom) && dateTime.isBefore(validTo);
+        return isValid;
     }
 
     /**
@@ -119,13 +109,18 @@ public class IngredientServiceImpl implements IngredientService {
      *
      * @return the date.
      */
-    public Date getNextExpireDate() {
+    public LocalDateTime getNextExpireDate() {
         return ingredientRepository.findMinDate().getValidTo();
     }
 
     @Override
     public List<Ingredient> findAllById(List<Long> ingredientIds) {
         return ingredientRepository.findAllById(ingredientIds);
+    }
+
+    @Override
+    public Ingredient findById(Long id) {
+        return ingredientRepository.findById(id).get();
     }
 
     /**

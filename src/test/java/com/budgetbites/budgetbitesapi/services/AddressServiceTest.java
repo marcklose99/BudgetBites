@@ -15,7 +15,6 @@ import static org.mockito.Mockito.when;
 
 class AddressServiceTest {
 
-
     private AddressService addressService;
     private AddressRepository mockedAddressRepository;
 
@@ -43,7 +42,6 @@ class AddressServiceTest {
     void isPostalCodeActive_ShouldReturnFalse_WhenFetchDateIsNotExpired() {
         // Given
         Address address = new Address(12459);
-        address.setLatestFetch(LocalDate.now().plusDays(1));
         when(mockedAddressRepository.findById(12459L)).thenReturn(Optional.of(address));
 
         // When

@@ -1,10 +1,12 @@
 package com.budgetbites.budgetbitesapi.models;
 
+import com.budgetbites.budgetbitesapi.util.RecipeUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -19,13 +21,10 @@ public class Recipe {
     @Column(nullable = false)
     private String title;
 
-    @ManyToMany
-    @JoinTable(
-            name = "recipe_ingredient",
-            joinColumns = @JoinColumn(name = "recipe_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id"))
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @Column(nullable = false)
-    private List<Ingredient> ingredientList;
+    private Set<RecipeIngredient> recipeIngredients;
 
     @OneToMany(mappedBy = "recipe",cascade = CascadeType.ALL)
     @Column(nullable = false)
@@ -37,4 +36,24 @@ public class Recipe {
     @Lob
     @Column(name="TEXT", length=512)
     private String description;
+
+    public Recipe(String title,
+                  String description,
+                  String imageName,
+                  List<Instruction> instructionList,
+                  Set<Ingredient> ingredients) {
+
+        this.title = title;
+        for(Instruction instruction : instructionList) {
+            instruction.setRecipe(this);
+        }
+        this.description = description;
+        this.imageName = imageName;
+        this.instructionList = instructionList;
+        this.recipeIngredients = RecipeUtil.getRecipeIngredients(this, ingredients);
+    }
+
+    public Recipe() {
+
+    }
 }
